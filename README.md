@@ -15,13 +15,20 @@ This is not a tutorial repo. These are production-minded patterns, power-user sh
 ## Flagship Pieces
 
 ### 1. Asset Logistics System
-High-volume, brand-controlled generation with consistency checks and multi-channel export logic.
+High-volume, brand-controlled generation with consistency checks and multi-channel export logic.  
+→ [workflows/asset-logistics.md](workflows/asset-logistics.md)
 
 ### 2. Cinematic Shortcut Pack
-Power-user patterns for environment extension, geometry-locked object removal, and style-matched batch variants.
+Power-user patterns for environment extension, geometry-locked object removal, and style-matched batch variants.  
+→ [shortcuts/cinematic-pack.md](shortcuts/cinematic-pack.md)
 
-### 3. Interactive Demo
-Self-contained visual walkthroughs of novel Firefly uses.
+### 3. Hybrid Notes
+Firefly ↔ ComfyUI / Unreal / ElevenLabs crossovers.  
+→ [hybrid/firefly-comfyui-unreal.md](hybrid/firefly-comfyui-unreal.md)
+
+### 4. Interactive Demo
+Self-contained cinematic extension demo.  
+→ [demos/cinematic-extension.html](demos/cinematic-extension.html)
 
 ---
 
