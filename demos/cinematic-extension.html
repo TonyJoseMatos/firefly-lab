@@ -6,90 +6,23 @@
   <title>Firefly Lab — Cinematic Extension</title>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0a0a0a;
-      color: #e0e0e0;
-      line-height: 1.5;
-    }
-    header {
-      padding: 2.5rem 2rem 1.5rem;
-      border-bottom: 1px solid #222;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2.2rem;
-      color: #ff0000;
-      letter-spacing: -0.5px;
-    }
-    .subtitle {
-      color: #888;
-      margin-top: 0.4rem;
-      font-size: 1.05rem;
-    }
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    .demo-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-    .panel {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .panel-header {
-      padding: 0.8rem 1rem;
-      background: #1a1a1a;
-      font-size: 0.85rem;
-      color: #aaa;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .panel-body {
-      padding: 1.5rem;
-      min-height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
-      font-size: 0.95rem;
-      text-align: center;
-    }
-    .after {
-      background: linear-gradient(135deg, #1a1208, #0d0d0d);
-      color: #ccc;
-    }
-    .steps {
-      margin-top: 2.5rem;
-    }
-    .steps h2 {
-      color: #ff0000;
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-    }
-    .step {
-      margin-bottom: 1.2rem;
-      padding-left: 1rem;
-      border-left: 2px solid #ff0000;
-    }
-    .step strong {
-      color: #fff;
-    }
-    footer {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #222;
-      color: #555;
-      font-size: 0.85rem;
-    }
+    body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.5; }
+    header { padding: 2.5rem 2rem 1.5rem; border-bottom: 1px solid #222; }
+    h1 { margin: 0; font-size: 2.2rem; color: #ff0000; }
+    .subtitle { color: #888; margin-top: 0.4rem; }
+    main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+    .panel { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; }
+    .panel-header { padding: 0.8rem 1rem; background: #1a1a1a; font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+    .panel-body { padding: 1.5rem; min-height: 200px; display: flex; align-items: center; justify-content: center; color: #666; text-align: center; }
+    .after { background: linear-gradient(135deg, #1a1208, #0d0d0d); color: #ccc; }
+    .steps { margin-top: 2.5rem; }
+    .steps h2 { color: #ff0000; font-size: 1.3rem; }
+    .step { margin-bottom: 1.2rem; padding-left: 1rem; border-left: 2px solid #ff0000; }
+    .step strong { color: #fff; }
+    .extra { margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .extra .panel-body { min-height: 140px; font-size: 0.9rem; }
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #222; color: #555; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -97,35 +30,31 @@
     <h1>Cinematic Environment Extension</h1>
     <div class="subtitle">Firefly Lab · Beachpunk Gigadream tone · Geometry locked, lighting continuous</div>
   </header>
-
   <main>
     <p>Firefly generative fill used to extend a locked product into a full cinematic environment while preserving exact geometry, materials, and lighting direction.</p>
-
     <div class="demo-grid">
       <div class="panel">
         <div class="panel-header">Before — Locked Master</div>
-        <div class="panel-body">
-          Product geometry exact.<br>Neutral ground.<br>Materials and speculars controlled.
-        </div>
+        <div class="panel-body">Product geometry exact.<br>Neutral ground.<br>Materials controlled.</div>
       </div>
       <div class="panel">
         <div class="panel-header">After — Generative Extension</div>
-        <div class="panel-body after">
-          Golden-hour environment extended.<br>Film grain + light leaks matched.<br>Product remains untouched.
-        </div>
+        <div class="panel-body after">Golden-hour environment extended.<br>Film grain + light leaks matched.<br>Product remains untouched.</div>
       </div>
     </div>
-
+    <div class="extra">
+      <div class="panel"><div class="panel-header">Variant A</div><div class="panel-body">Social crop<br>Style-matched</div></div>
+      <div class="panel"><div class="panel-header">Variant B</div><div class="panel-body">Retail hero<br>Geometry locked</div></div>
+      <div class="panel"><div class="panel-header">Variant C</div><div class="panel-body">Motion still<br>Lighting continuous</div></div>
+    </div>
     <div class="steps">
       <h2>Pattern</h2>
       <div class="step"><strong>1. Master Lock</strong> — Approved product with fixed geometry and lighting.</div>
-      <div class="step"><strong>2. Constrained Fill</strong> — Generative fill outside the product using cinematic prompt language (Kodak Ektar, golden hour, film grain).</div>
-      <div class="step"><strong>3. Continuity Check</strong> — Verify edges, reflections, and color temperature stay consistent.</div>
+      <div class="step"><strong>2. Constrained Fill</strong> — Generative fill outside the product using cinematic prompt language.</div>
+      <div class="step"><strong>3. Continuity Check</strong> — Verify edges, reflections, and color temperature.</div>
+      <div class="step"><strong>4. Variant Batch</strong> — Style-matched channel variants from the same master.</div>
     </div>
-
-    <footer>
-      Self-contained demo · firefly-lab · Link or embed from portfolio
-    </footer>
+    <footer>Self-contained demo · firefly-lab · Link or embed from portfolio</footer>
   </main>
 </body>
 </html>
