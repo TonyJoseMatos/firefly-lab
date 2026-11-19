@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firefly Lab — Playable Cinematic Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; }
+    header { padding: 1.5rem 2rem; border-bottom: 1px solid #222; }
+    h1 { margin: 0; color: #ff0000; font-size: 1.8rem; }
+    .subtitle { color: #888; margin-top: 0.3rem; font-size: 0.95rem; }
+    main { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+    .drop-zone {
+      border: 2px dashed #333;
+      border-radius: 8px;
+      padding: 2.5rem;
+      text-align: center;
+      color: #666;
+      margin: 1rem 0 1.5rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .drop-zone.dragover { border-color: #ff0000; background: #1a0a0a; color: #ff0000; }
+    .workspace { display: none; }
+    .workspace.active { display: block; }
+    .preview-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    .panel { background: #111; border: 1px solid #222; border-radius: 8px; overflow: hidden; }
+    .panel-header { padding: 0.6rem 1rem; background: #1a1a1a; font-size: 0.75rem; color: #aaa; text-transform: uppercase; }
+    .panel-body { min-height: 280px; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .panel-body img { max-width: 100%; max-height: 260px; object-fit: contain; }
+    .controls { display: flex; gap: 0.8rem; margin: 1.2rem 0; flex-wrap: wrap; }
+    button {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #333;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover { border-color: #ff0000; }
+    button.primary { background: #ff0000; border-color: #ff0000; }
+    .step-indicator { color: #888; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .log { background: #111; border: 1px solid #222; border-radius: 6px; padding: 1rem; margin-top: 1rem; font-size: 0.85rem; color: #aaa; min-height: 60px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Playable Cinematic Extension</h1>
+    <div class="subtitle">Drag in a locked master · Step through the workflow · Beachpunk Gigadream tone</div>
+  </header>
+  <main>
+    <div class="drop-zone" id="dropZone">
+      Drop a locked master image here<br>or click to browse
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+
+    <div class="workspace" id="workspace">
+      <div class="step-indicator" id="stepIndicator">Step 1 of 4 — Master Lock</div>
+      <div class="preview-row">
+        <div class="panel">
+          <div class="panel-header">Locked Master</div>
+          <div class="panel-body" id="masterPreview"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header" id="rightHeader">Ready</div>
+          <div class="panel-body" id="resultPreview">Drop an image to begin</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="btnLock" class="primary">1. Lock Master</button>
+        <button id="btnExtend">2. Generative Extend</button>
+        <button id="btnCheck">3. Continuity Check</button>
+        <button id="btnVariants">4. Generate Variants</button>
+        <button id="btnReset">Reset</button>
+      </div>
+      <div class="log" id="log">Waiting for locked master...</div>
+    </div>
+  </main>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const workspace = document.getElementById('workspace');
+    const masterPreview = document.getElementById('masterPreview');
+    const resultPreview = document.getElementById('resultPreview');
+    const rightHeader = document.getElementById('rightHeader');
+    const stepIndicator = document.getElementById('stepIndicator');
+    const log = document.getElementById('log');
+
+    let currentImage = null;
+    let step = 0;
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentImage = e.target.result;
+        masterPreview.innerHTML = `<img src="${currentImage}" alt="Master">`;
+        resultPreview.innerHTML = `<img src="${currentImage}" alt="Master" style="opacity:0.6">`;
+        rightHeader.textContent = 'Locked Master';
+        workspace.classList.add('active');
+        dropZone.style.display = 'none';
+        step = 1;
+        updateUI();
+        logMessage('Master loaded. Geometry and materials locked.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function logMessage(msg) {
+      log.textContent = msg;
+    }
+
+    function updateUI() {
+      const steps = [
+        'Step 1 of 4 — Master Lock',
+        'Step 2 of 4 — Generative Extend',
+        'Step 3 of 4 — Continuity Check',
+        'Step 4 of 4 — Variant Batch'
+      ];
+      stepIndicator.textContent = steps[step - 1] || steps[0];
+    }
+
+    document.getElementById('btnLock').onclick = () => {
+      if (!currentImage) return;
+      step = 1;
+      rightHeader.textContent = 'Locked Master';
+      resultPreview.innerHTML = `<img src="${currentImage}" alt="Locked">`;
+      updateUI();
+      logMessage('Master locked. Geometry, materials, and lighting direction fixed.');
+    };
+
+    document.getElementById('btnExtend').onclick = () => {
+      if (!currentImage) return;
+      step = 2;
+      rightHeader.textContent = 'Generative Extension';
+      resultPreview.innerHTML = `<img src="${currentImage}" alt="Extended" style="filter: contrast(1.1) saturate(1.15) brightness(1.05);">`;
+      updateUI();
+      logMessage('Generative fill applied outside product. Cinematic environment extended. Product geometry preserved.');
+    };
+
+    document.getElementById('btnCheck').onclick = () => {
+      if (!currentImage) return;
+      step = 3;
+      rightHeader.textContent = 'Continuity Verified';
+      resultPreview.innerHTML = `<img src="${currentImage}" alt="Checked" style="filter: contrast(1.1) saturate(1.15) brightness(1.05);">`;
+      updateUI();
+      logMessage('Continuity check passed. Edges, reflections, and color temperature consistent. No brand drift.');
+    };
+
+    document.getElementById('btnVariants').onclick = () => {
+      if (!currentImage) return;
+      step = 4;
+      rightHeader.textContent = 'Style-Matched Variants';
+      resultPreview.innerHTML = `
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;">
+          <img src="${currentImage}" style="max-height:120px;filter:contrast(1.1)saturate(1.1);">
+          <img src="${currentImage}" style="max-height:120px;filter:contrast(1.05)saturate(1.2)hue-rotate(5deg);">
+          <img src="${currentImage}" style="max-height:120px;filter:contrast(1.15)saturate(1.1)brightness(1.08);">
+        </div>
+      `;
+      updateUI();
+      logMessage('3 style-matched variants generated from the locked master. Ready for multi-channel export.');
+    };
+
+    document.getElementById('btnReset').onclick = () => {
+      currentImage = null;
+      step = 0;
+      workspace.classList.remove('active');
+      dropZone.style.display = 'block';
+      masterPreview.innerHTML = '';
+      resultPreview.innerHTML = 'Drop an image to begin';
+      logMessage('Waiting for locked master...');
+      fileInput.value = '';
+    };
+  </script>
+</body>
+</html>
